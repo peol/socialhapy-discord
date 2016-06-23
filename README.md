@@ -15,7 +15,7 @@ First off, install the dependencies:
 $ npm install
 ```
 
-Then you need to provide the necessary configuration, copy the `./config-example.js` file
+Then you need to provide the necessary configuration, copy the `./src/config-example.js` file
 to `./src/config.js` and modify it to fit your needs. This file is git-ignored so
 we don't leak any credentials from contributors.
 
