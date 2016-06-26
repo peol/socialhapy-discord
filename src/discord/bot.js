@@ -15,6 +15,21 @@ let commands = fs.readdirSync( path.join( __dirname, "/commands" ) ).map( file =
 } );
 
 /**
+* Updates the bot with a random "Playing" status.
+*/
+function updatePlayingStatus( bot ) {
+	const playing = config.playing[Math.floor( Math.random() * config.playing.length )];
+
+	bot.setPresence( {
+		game: playing
+	} );
+
+	logger.debug( `Updated playing status to: 'Playing ${playing}'` );
+
+	setTimeout( () => updatePlayingStatus( bot ), config.playingUpdateTimeout );
+}
+
+/**
 * Create a bot instance.
 *
 * @returns {Object} A discord.io bot instance
@@ -30,9 +45,7 @@ export function create() {
 			avatar: fs.readFileSync( path.join( __dirname, "../../resources/", config.profilePicture ), "base64" )
 		} );
 
-		bot.setPresence( {
-			game: config.playing
-		} );
+		updatePlayingStatus( bot );
 
 		logger.info( "Up and running..." );
 	} );

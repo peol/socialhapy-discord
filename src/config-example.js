@@ -18,5 +18,9 @@ export const config = {
 	// path is relative to ./src/discord/:
 	"profilePicture": "./avatar.jpg",
 	// discord "playing" text:
-	"playing": "with your hearts"
+	"playing": [
+		"with your hearts"
+	],
+	// milliseconds between updates (default two hours):
+	"playingUpdateTimeout": 1000 * 60 * 60 * 2
 };
