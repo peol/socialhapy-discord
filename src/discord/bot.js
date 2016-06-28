@@ -5,6 +5,9 @@ import fs from "fs";
 import path from "path";
 import Discord from "discord.io";
 
+// discord reconnect (default 1 min):
+const RECONNECT_TIMEOUT = 1000 * 60;
+
 /**
 * Automagically find all commands in ./commands, and load their `register`
 * callbacks in an array used on each message received.
@@ -35,10 +38,17 @@ function updatePlayingStatus( bot ) {
 * @returns {Object} A discord.io bot instance
 */
 export function create() {
-	const bot = new Discord.Client( {
+	let bot = new Discord.Client( {
 		token: config.credentials.discord.token,
 		autorun: true
 	} );
+
+	const sendMessage = bot.sendMessage;
+
+	bot.sendMessage = ( ...args ) => {
+		logger.debug( "Sending message:", ...args );
+		return sendMessage.call( bot, ...args );
+	};
 
 	bot.on( "ready", () => {
 		bot.editUserInfo( {
@@ -52,12 +62,13 @@ export function create() {
 
 	bot.on( "disconnected", () => {
 		logger.warn( "Disconnected from discord..." );
-		// we kill the process here to avoid any event registration build up
-		// (in discord.io lib):
-		process.exit();
+		setTimeout( () => bot.connect(), RECONNECT_TIMEOUT );
 	} );
 
 	bot.on( "message", ( ...args ) => {
+		logger.debug( "New message:", ...args );
 		commands.forEach( cmd => cmd( bot, ...args ) );
 	} );
+
+	return bot;
 }
