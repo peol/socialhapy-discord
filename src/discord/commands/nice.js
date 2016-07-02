@@ -12,7 +12,7 @@ export function register( bot, user, userID, channelID, message/*, rawEvent*/ ) 
 
 	const rnd = Math.random();
 
-	if ( rnd > 0.75 ) {
+	if ( rnd > 0.70 ) {
 		bot.sendMessage( {
 			to: channelID,
 			message: "nice nice nice nice nice!"

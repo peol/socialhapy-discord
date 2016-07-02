@@ -1,5 +1,6 @@
 import { config } from "../config";
 import { logger } from "../logger";
+import { extensions } from "./extensions";
 
 import fs from "fs";
 import path from "path";
@@ -49,6 +50,10 @@ export function create() {
 		logger.debug( "Sending message:", ...args );
 		return sendMessage.call( bot, ...args );
 	};
+
+	Object.keys( extensions ).forEach( extension => {
+		bot[extension] = extensions[extension];
+	} );
 
 	bot.on( "ready", () => {
 		bot.editUserInfo( {

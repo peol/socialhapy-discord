@@ -8,6 +8,13 @@
         "sourceType": "module"
     },
     "rules": {
+        "no-unused-vars": [
+          "error",
+          {
+            "vars": "all",
+            "args": "after-used"
+          }
+        ],
         "indent": [
             "error",
             "tab"

@@ -6,13 +6,17 @@ import Twit from "twit";
 
 const TWITTER_RECONNECT_TIMEOUT = 60 * 1000;
 
-const api = new Twit( {
-	consumer_key: config.credentials.twitter.consumerKey,
-	consumer_secret: config.credentials.twitter.consumerSecret,
-	access_token: config.credentials.twitter.accessToken,
-	access_token_secret: config.credentials.twitter.accessTokenSecret,
-	timeout_ms: TWITTER_RECONNECT_TIMEOUT
-} );
+let api = null;
+
+function getAPI() {
+	return api || ( api = new Twit( {
+		consumer_key: config.credentials.twitter.consumerKey,
+		consumer_secret: config.credentials.twitter.consumerSecret,
+		access_token: config.credentials.twitter.accessToken,
+		access_token_secret: config.credentials.twitter.accessTokenSecret,
+		timeout_ms: TWITTER_RECONNECT_TIMEOUT
+	} ) );
+}
 
 /**
 * Starts a twitter stream, invoking the provided callback on each matched tweet.
@@ -21,6 +25,7 @@ const api = new Twit( {
 * @returns {Promise} Eventually resolved when the stream is connected
 */
 export function start( cb ) {
+	const api = getAPI();
 	return getUserIDs( api, config.streamTweetsFrom ).then( users => {
 		const stream = api.stream( "statuses/filter", { follow: users } );
 
