@@ -24,6 +24,6 @@ or you will risk getting your message removed and/or kicked from the server.
 
 Tip: If you already broke these rules, you can always edit/delete your message(s).`
 		} );
-		db.get( "users" ).push( { userID } ).value();
+		db.get( "users" ).push( { userID, date: new Date() } ).value();
 	}
 }
