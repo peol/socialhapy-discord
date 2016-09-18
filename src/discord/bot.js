@@ -19,6 +19,15 @@ let commands = fs.readdirSync( path.join( __dirname, "/commands" ) ).map( file =
 } );
 
 /**
+* Automagically find all triggers in ./triggers, and load their `register`
+* callbacks in an array used on each message received.
+*/
+let triggers = fs.readdirSync( path.join( __dirname, "/triggers" ) ).map( file => {
+	logger.info( `Loaded trigger: ${file}` );
+	return require( path.join( __dirname, "/triggers/", file ) ).register;
+} );
+
+/**
 * Updates the bot with a random "Playing" status.
 */
 function updatePlayingStatus( bot ) {
@@ -73,6 +82,7 @@ export function create() {
 	bot.on( "message", ( ...args ) => {
 		logger.debug( "New message:", ...args );
 		commands.forEach( cmd => cmd( bot, ...args ) );
+		triggers.forEach( trigger => trigger( bot, ...args ) );
 	} );
 
 	return bot;

@@ -15,6 +15,7 @@ export const config = {
 	],
 	// discord channel ID (note, not that name of the channel):
 	"streamTweetsChannelID": "",
+	"tradingChannelID": "",
 	// path is relative to ./src/discord/:
 	"profilePicture": "./avatar.jpg",
 	// discord "playing" text:
