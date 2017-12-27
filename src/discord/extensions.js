@@ -6,7 +6,7 @@ export const extensions = {
 	* @returns {Number} the index/position where the bot was mentioned (-1 if it wasn't)
 	*/
 	mentionedIndex: function( msg ) {
-		const botMsgId = `<@${this.id}>`;
+		const botMsgId = `<@${this.user.id}>`;
 		return msg.indexOf( botMsgId );
 	}
 };

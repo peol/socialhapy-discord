@@ -8,9 +8,9 @@ const bot = create();
 if ( config.streamTweetsFrom.length ) {
 	start( tweet => {
 		logger.info( "New tweet:", tweet );
-		bot.sendMessage( {
-			to: config.streamTweetsChannelID,
-			message: `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`
-		} );
+		const channel = bot.channels[config.streamTweetsChannelID];
+		channel.send(
+			`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`
+		);
 	} );
 }

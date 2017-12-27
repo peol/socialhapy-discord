@@ -4,7 +4,7 @@ import { extensions } from "./extensions";
 
 import fs from "fs";
 import path from "path";
-import Discord from "discord.io";
+import Discord from "discord.js";
 
 // discord reconnect (default 1 min):
 const RECONNECT_TIMEOUT = 1000 * 60;
@@ -19,61 +19,31 @@ let commands = fs.readdirSync( path.join( __dirname, "/commands" ) ).map( file =
 } );
 
 /**
-* Updates the bot with a random "Playing" status.
-*/
-function updatePlayingStatus( bot ) {
-	const playing = config.playing[Math.floor( Math.random() * config.playing.length )];
-
-	bot.setPresence( {
-		game: playing
-	} );
-
-	logger.debug( `Updated playing status to: 'Playing ${playing}'` );
-
-	setTimeout( () => updatePlayingStatus( bot ), config.playingUpdateTimeout );
-}
-
-/**
 * Create a bot instance.
 *
 * @returns {Object} A discord.io bot instance
 */
 export function create() {
-	let bot = new Discord.Client( {
-		token: config.credentials.discord.token,
-		autorun: true
-	} );
+	logger.debug( "Creating bot..." );
 
-	const sendMessage = bot.sendMessage;
-
-	bot.sendMessage = ( ...args ) => {
-		logger.debug( "Sending message:", ...args );
-		return sendMessage.call( bot, ...args );
-	};
+	let bot = new Discord.Client();
 
 	Object.keys( extensions ).forEach( extension => {
 		bot[extension] = extensions[extension];
 	} );
 
 	bot.on( "ready", () => {
-		bot.editUserInfo( {
-			avatar: fs.readFileSync( path.join( __dirname, "../../resources/", config.profilePicture ), "base64" )
-		} );
-
-		updatePlayingStatus( bot );
-
 		logger.info( "Up and running..." );
 	} );
 
-	bot.on( "disconnected", () => {
-		logger.warn( "Disconnected from discord..." );
-		setTimeout( () => bot.connect(), RECONNECT_TIMEOUT );
+	bot.on( "message", ( msg ) => {
+		logger.debug( "New message:", msg.content );
+		commands.forEach( cmd => cmd( bot, msg ) );
 	} );
 
-	bot.on( "message", ( ...args ) => {
-		logger.debug( "New message:", ...args );
-		commands.forEach( cmd => cmd( bot, ...args ) );
-	} );
+	logger.debug( "Connecting..." );
+
+	bot.login(config.credentials.discord.token);
 
 	return bot;
 }

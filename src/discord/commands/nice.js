@@ -5,17 +5,17 @@
 * @param {Object} A discord.io bot instance
 * @param {...args} The default callback arguments from a discord.io `message` event
 */
-export function register( bot, user, userID, channelID, message/*, rawEvent*/ ) {
-	if ( message.toLowerCase().replace( /[^\w\s]+/g, "" ).split( " " ).indexOf( "nice" ) === -1 ) {
+
+const cap = 0.70;
+
+export function register( bot, message ) {
+	if ( message.content.toLowerCase().replace( /[^\w\s]+/g, "" ).split( " " ).indexOf( "nice" ) === -1 ) {
 		return;
 	}
 
 	const rnd = Math.random();
 
-	if ( rnd > 0.70 ) {
-		bot.sendMessage( {
-			to: channelID,
-			message: "nice nice nice nice nice!"
-		} );
+	if ( rnd > cap ) {
+		message.channel.send( "nice nice nice nice nice!" );
 	}
 }

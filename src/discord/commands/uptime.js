@@ -8,13 +8,10 @@ const started = new Date();
 * @param {Object} A discord.io bot instance
 * @param {...args} The default callback arguments from a discord.io `message` event
 */
-export function register( bot, user, userID, channelID, message/*, rawEvent*/ ) {
-	if ( message !== "!uptime" ) {
+export function register( bot, message ) {
+	if ( message.content !== "!uptime" ) {
 		return;
 	}
 
-	bot.sendMessage( {
-		to: channelID,
-		message: `I've been up for ${new Duration( started, new Date() ).toString( 1, 1 )}`
-	} );
+	message.reply( `I've been up for ${new Duration( started, new Date() ).toString( 1, 1 )}` );
 }

@@ -6,14 +6,12 @@
 * @param {Object} A discord.io bot instance
 * @param {...args} The default callback arguments from a discord.io `message` event
 */
-export function register( bot, user, userID, channelID, message/*, rawEvent*/) {
-	if ( message !== "!rules" ) {
+export function register( bot, message ) {
+	if ( message.content !== "!rules" ) {
 		return;
 	}
 
-	bot.sendMessage( {
-		to: channelID,
-		message:
+	message.channel.send(
 `This is a place to hang out and make friends. Don't fuck that up.
 
 - Be respectful.
@@ -23,5 +21,5 @@ export function register( bot, user, userID, channelID, message/*, rawEvent*/) {
 
 If you're being unnecessarily troublesome, the mods will remove you from the Discord server and \
 you will not regain access, please don't make us do that!`
-	} );
+	);
 }

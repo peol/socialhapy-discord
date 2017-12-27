@@ -26,9 +26,9 @@ const answers = [
 * @param {Object} A discord.io bot instance
 * @param {...args} The default callback arguments from a discord.io `message` event
 */
-export function register( bot, user, userID, channelID, message/*, rawEvent*/ ) {
-	const idx = bot.mentionedIndex( message );
-	const isQuestion = message.slice( -1 ) === "?";
+export function register( bot, message ) {
+	const idx = bot.mentionedIndex( message.content );
+	const isQuestion = message.content.slice( -1 ) === "?";
 
 	if ( idx === -1 ) {
 		return;
@@ -43,8 +43,5 @@ export function register( bot, user, userID, channelID, message/*, rawEvent*/ ) 
 		msg = responses[Math.floor(rnd * responses.length)];
 	}
 
-	bot.sendMessage( {
-		to: channelID,
-		message: `<@${userID}>: ${msg}`
-	} );
+	message.reply( msg );
 }
